@@ -1,6 +1,7 @@
 
 package application;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -42,15 +43,21 @@ public class Program {
         System.out.print("How many contracts to this worker? ");
         Integer a = read.nextInt();
         String dateConverter = "";
-        LocalDate localdate = LocalDate.parse(dateConverter);
-        DateTimeFormatter d1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        for(int i = 0; i < a; i++){
-            System.out.printf("Enter contract #%d data:\n",i+1);
-            System.out.println("Date (DD/MM/YYYY): ");
-            dateConverter = read.next();
 
-
-
+        for (int i = 0; i < a; i++) {
+            System.out.printf("Enter contract #%d data:\n", i + 1);
+            System.out.print("Date ex(DD/MM/YYYY): ");
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy",Locale.ENGLISH);
+            String data01 = read.next();
+            while (continued) {
+                try {
+                    Date date = format.parse(data01);
+                    h.setDate(date);
+                    continued = false;
+                } catch (ParseException e) {
+                    System.out.println("Erro, insira uma data válida");
+                }
+            }
         }
     }
 
