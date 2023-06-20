@@ -17,29 +17,31 @@ import entitiesEnum.WorkLevel;
 public class Program {
     public static void main(String[] args) {
         Locale.setDefault(Locale.CANADA);
-        Worker w = new Worker();
         Departament d = new Departament();
         HourContract h = new HourContract();
         Scanner read = new Scanner(System.in);
         System.out.print("Enter department's name: ");
-        d.setName(read.nextLine());
-        System.out.println(d.getName());
+        read.next();
+        String departamenteName = read.nextLine();
         System.out.println("Enter worker data:");
         System.out.print("Enter user name: ");
         read.next();
-        w.setName(read.nextLine());
+        String workerName = read.nextLine();
         boolean continued = true;
+        WorkLevel workLevel;
+        String workerLevel = "";
         while (continued) {
             try {
                 System.out.print("Level: ");
-                w.setLevel(WorkLevel.valueOf(read.next()));
+                 workerLevel = read.next();
                 continued = false;
             } catch (Exception ey) {
                 System.out.println("Error 404");
             }
         }
         System.out.print("Base salary: ");
-        w.setBaseSalary(read.nextDouble());
+        Double baseSalary = read.nextDouble();
+        Worker w = new Worker(workerName,WorkLevel.valueOf(workerLevel),baseSalary, new Departament(departamenteName));
         System.out.print("How many contracts to this worker? ");
         Integer a = read.nextInt();
         String dateConverter = "";
