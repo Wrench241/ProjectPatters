@@ -18,7 +18,6 @@ public class Program {
     public static void main(String[] args) {
         Locale.setDefault(Locale.CANADA);
         Departament d = new Departament();
-        HourContract h = new HourContract();
         Scanner read = new Scanner(System.in);
         System.out.print("Enter department's name: ");
         read.next();
@@ -31,9 +30,10 @@ public class Program {
         WorkLevel workLevel;
         String workerLevel = "";
         while (continued) {
+            System.out.print("Level: ");
+            workerLevel = read.next();
             try {
-                System.out.print("Level: ");
-                 workerLevel = read.next();
+                WorkLevel.valueOf(workerLevel);
                 continued = false;
             } catch (Exception ey) {
                 System.out.println("Error 404");
@@ -43,24 +43,49 @@ public class Program {
         Double baseSalary = read.nextDouble();
         Worker w = new Worker(workerName,WorkLevel.valueOf(workerLevel),baseSalary, new Departament(departamenteName));
         System.out.print("How many contracts to this worker? ");
-        Integer a = read.nextInt();
-        String dateConverter = "";
-
+        int a = read.nextInt();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy",Locale.ENGLISH);
         for (int i = 0; i < a; i++) {
             System.out.printf("Enter contract #%d data:\n", i + 1);
             System.out.print("Date ex(DD/MM/YYYY): ");
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy",Locale.ENGLISH);
             String data01 = read.next();
+            Date date = null;
             while (continued) {
                 try {
-                    Date date = format.parse(data01);
-                    h.setDate(date);
+                    date = format.parse(data01);
                     continued = false;
                 } catch (ParseException e) {
-                    System.out.println("Erro, insira uma data válida");
+                    System.out.println("Error, insert a valid date");
                 }
             }
+            System.out.print("Value per hour: ");
+            double valuePerHour= read.nextDouble();
+            System.out.print("Duration (hours): ");
+            int hours = read.nextInt();
+            HourContract hourContract = new HourContract(date,valuePerHour,hours);
+            w.addContract(hourContract);
+
         }
+        System.out.println();
+        System.out.print("Enter month and year to calculate income (MM/YYYY): ");
+        String parse = read.next();
+        Date date=null;
+        while (continued) {
+            try {
+                date = format.parse("MM/yyyy");
+                parse = read.next();
+                continued = false;
+            } catch (ParseException e) {
+                System.out.println("Error, insert correct date.");
+
+            }
+        }
+        int month = Integer.parseInt(parse.substring(0,2));
+        int year = Integer.parseInt(parse.substring(3));
+        System.out.print("Name: "+w.getName());
+        System.out.print("Department: "+w.getDepartment());
+        System.out.print("Income for "+parse+": "+String.format("%.2f",w.income(month,year)));
+
     }
 
 }
