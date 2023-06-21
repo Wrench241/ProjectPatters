@@ -47,12 +47,12 @@ public class Program {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy",Locale.ENGLISH);
         for (int i = 0; i < a; i++) {
             System.out.printf("Enter contract #%d data:\n", i + 1);
-            System.out.print("Date ex(DD/MM/YYYY): ");
+            System.out.print("Date for(DD/MM/YYYY): ");
             String data01 = read.next();
-            Date date = null;
+            HourContract h = new HourContract();
             while (continued) {
                 try {
-                    date = format.parse(data01);
+                    h.setDate(format.parse(data01));
                     continued = false;
                 } catch (ParseException e) {
                     System.out.println("Error, insert a valid date");
@@ -62,29 +62,28 @@ public class Program {
             double valuePerHour= read.nextDouble();
             System.out.print("Duration (hours): ");
             int hours = read.nextInt();
-            HourContract hourContract = new HourContract(date,valuePerHour,hours);
+            HourContract hourContract = new HourContract(h.getDate(),valuePerHour,hours);
             w.addContract(hourContract);
-
         }
+        HourContract h = new HourContract();
         System.out.println();
-        System.out.print("Enter month and year to calculate income (MM/YYYY): ");
-        String parse = read.next();
-        Date date=null;
-        while (continued) {
+        boolean continued2 = true;
+        SimpleDateFormat format1 = new SimpleDateFormat("MM/yyyy");
+        while (continued2){
+            System.out.print("Enter month and year to calculate income (MM/YYYY): ");
+            h.setDateString(read.next());
             try {
-                date = format.parse("MM/yyyy");
-                parse = read.next();
-                continued = false;
+                Date date = format1.parse(h.getDateString());
+                continued2 = false;
             } catch (ParseException e) {
                 System.out.println("Error, insert correct date.");
-
             }
         }
-        int month = Integer.parseInt(parse.substring(0,2));
-        int year = Integer.parseInt(parse.substring(3));
+        int month = Integer.parseInt(h.getDateString().substring(0,2));
+        int year = Integer.parseInt(h.getDateString().substring(3));
         System.out.print("Name: "+w.getName());
         System.out.print("Department: "+w.getDepartment());
-        System.out.print("Income for "+parse+": "+String.format("%.2f",w.income(month,year)));
+        System.out.print("Income for "+h.getDateString()+": "+String.format("%.2f",w.income(month,year)));
 
     }
 
